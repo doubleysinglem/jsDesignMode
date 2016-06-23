@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script type="text/javascript">
+	var CanvasCommand = (function(){
+		var canvas = document.getElementById('canvas'),
+			ctx = canvas.getContext('2d');
+		var Action = {
+			fillStyle :function(c){ctx.fillStyle = c},
+			fillRect :function(x,y,width,height){ctx.fillRect(x,y,width,height)}
+		};
+		return {
+			excute : function(msg){
+				if(!msg)
+					return;
+				if(msg.length){
+					for(var i=0,len=msg.length;i<len;i++){
+						arguments.callee(msg[i]);
+					}
+				}else{
+					msg.param = Object.prototype.toString.call(msg.param) === "[object Array]"?
+								  msg.param:[msg.param];
+					Action[msg.command].apply(Action,msg.param);
+				}
+			}
+		}
+	})()
+
+	CanvasCommand.excute([
+		{command: 'fillStyle',param:'red'},
+		{command: 'fillRect',param:[20,20,100,100]}
+	]);
+</script>
+</body>
+</html>
